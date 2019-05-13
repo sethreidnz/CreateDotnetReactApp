@@ -1,0 +1,27 @@
+{
+  "name": "create-dotnet-react-app",
+  "version": "1.0.0",
+  "description": "Create a basic react scaffold with dotnet cli and create-react-app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.org/zarmada/create-dotnet-react-app.git"
+  },
+  "author": "Seth Reid",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "commander": "^2.20.0",
+    "fs-extra": "^7.0.1",
+    "lodash": "^4.17.11",
+    "replace-in-file": "^4.0.0",
+    "rimraf": "^2.6.3",
+    "simple-git": "^1.112.0"
+  },
+  "bin": {
+    "create-dotnet-react-app": "./index.js"
+  }
+}

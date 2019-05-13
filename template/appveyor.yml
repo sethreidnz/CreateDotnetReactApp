@@ -1,0 +1,25 @@
+version: 1.0.{build}
+image: Visual Studio 2017
+environment:
+  WebPath: src\CreateDotnetReactApp.Web
+  nodejs_version: "8"
+install:
+  - ps: Install-Product node $env:nodejs_version
+  - cmd: if not exist .\logs mkdir .\logs
+  - cmd: if not exist .\publish mkdir .\publish
+configuration: Release
+test: off
+cache:
+  - node_modules -> %WebPath%\ClientApp\package.json
+build_script:
+  - cmd: dotnet publish %WebPath% -c %CONFIGURATION% -o %APPVEYOR_BUILD_FOLDER%\publish
+artifacts:
+  - path: publish
+    name: Package
+    type: WebDeployPackage
+# Uncomment below to deploy to environment automatically
+#deploy:
+#  - provider: Environment
+#    name: environment-name
+#    on:
+#      branch: develop
