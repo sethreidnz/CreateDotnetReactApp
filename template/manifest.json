@@ -3,6 +3,7 @@
   "clientAppPath": "ClientApp",
   "filesToCopy": [
     "src/CreateDotnetReactApp.Web/ClientApp/src/",
+    "src/Rules.ruleset",
     "appveyor.yml",
     ".gitignore",
     ".gitattributes",
