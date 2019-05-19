@@ -4,6 +4,7 @@
   "filesToCopy": [
     "src/CreateDotnetReactApp.Web/ClientApp/src/",
     "src/Rules.ruleset",
+    "src/.editorconfig",
     "appveyor.yml",
     ".gitignore",
     ".gitattributes",
