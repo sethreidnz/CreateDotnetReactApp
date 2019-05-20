@@ -23,3 +23,5 @@ dotnet add ProjectName.Web.csproj package Desktop.Analyzers
     <CodeAnalysisRuleSet>..\Rules.ruleset</CodeAnalysisRuleSet>
 </PropertyGroup>
 ```
+
+> **Note:** The default rules from within StylCop change from time to time, so you may need to ignore new rules that are not ignored in the current Ruleset file. If you find this, please do a PR against the `template` in this project to rectify for future projects.
