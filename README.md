@@ -50,3 +50,9 @@ Current the steps are as follows:
 - Copy over some template files from the template folder. See [the template manifest file](template\manifest.json) for which.
 - Replace the project name from the copies template
 - Install additional packages
+
+## Recipes
+
+We also have what are called 'recipes' which are configurations or changes you will want to make in specific projects but have not yet made their way into the default output. Feel free to add new recipes vis pull request.
+
+- [How to add Roslyn code analysers](recipes/adding-roslyn-analysers.md)
