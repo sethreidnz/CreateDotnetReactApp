@@ -12,6 +12,8 @@
     "README.md"
   ],
   "npmPackagesToInstall": [
-    "react-router-dom"
+    "react-router-dom",
+    "node-sass",
+    "normalize.css"
   ]
 }
