@@ -56,3 +56,4 @@ Current the steps are as follows:
 We also have what are called 'recipes' which are configurations or changes you will want to make in specific projects but have not yet made their way into the default output. Feel free to add new recipes vis pull request.
 
 - [How to add Roslyn code analysers](recipes/adding-roslyn-analysers.md)
+- [How to add SegoeUI font with css](recipes/adding-segoe-ui-css.md)
