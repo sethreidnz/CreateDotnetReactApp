@@ -3,7 +3,7 @@ var path = require("path");
 const replace = require("replace-in-file");
 
 const { removeDirectoryIfExists } = require("./lib/utility");
-const { gitClone, gitInit, gitCheckout } = require("./lib/git");
+const { gitClone, gitInit, gitCheckout, gitFetch } = require("./lib/git");
 const { generateBaseSolution } = require("./lib/dotnet");
 const { createReactApp } = require("./lib/create-react-app");
 const { installNpmPackages } = require("./lib/npm");
@@ -36,7 +36,8 @@ const createDotnetReactApp = async (
 
   if (branch && branch !== "master") {
     console.log(`Checking out branch ${branch}`);
-    gitCheckout(sourceCloneOutputPath, branch);
+    await gitFetch();
+    await gitCheckout(sourceCloneOutputPath, branch);
   }
 
   const templateManifest = getTemplateManifest(sourceCloneOutputPath);

@@ -11,8 +11,8 @@
             "program": "${workspaceFolder}/index.js",
             "args": [
                 "--projectName", "CreateDotnetReactApp",
-                "--output", "${workspaceFolder}\\build",
-                "--branch", "master",
+                "--output", "${workspaceFolder}\\temp",
+                "--branch", "add-branch-for-debug",
                 "--clean", ""
             ]
         }
