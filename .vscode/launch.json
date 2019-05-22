@@ -10,7 +10,9 @@
             "name": "Launch Program",
             "program": "${workspaceFolder}/index.js",
             "args": [
-                "--projectName", "PoopProject"
+                "--projectName", "CreateDotnetReactApp",
+                "--output", "${workspaceFolder}/temp",
+                "--branch", "added-segoeui-docs"
             ]
         }
     ]

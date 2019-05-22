@@ -26,17 +26,27 @@ program
     "-o, --output [output]",
     "The folder to output the project into. Defaults to the current directory."
   )
+
+  .option(
+    "-b, --branch [output]",
+    "The branch to use when cloning the repository, defaults to master."
+  )
   .parse(process.argv);
 
 // command-line options
 let projectName = program.projectName;
 let outputFolder = program.output ? program.output : "./";
+let branch = program.branch ? program.branch : null;
 
 // validate the name
 if (!projectName) {
-  console.log(chalk.red("You must specify a solution name with the flag -n [projectName] or --projectName [projectName]"));
+  console.log(
+    chalk.red(
+      "You must specify a solution name with the flag -n [projectName] or --projectName [projectName]"
+    )
+  );
   process.exit();
-} else if(!isCamelCase(projectName)) {
+} else if (!isCamelCase(projectName)) {
   console.log(chalk.red("The [projectName] parameter must be in CamelCase"));
 }
 
@@ -66,6 +76,6 @@ if (fs.existsSync(path.join(outputFolder, projectName))) {
   process.exit();
 }
 
-createDotnetReactApp(projectName, outputFolder, sourceGithubUri, workingDir)
+createDotnetReactApp(projectName, outputFolder, sourceGithubUri, workingDir, branch)
   .then(() => console.log("Project Generated"))
   .catch(error => console.error(error));
