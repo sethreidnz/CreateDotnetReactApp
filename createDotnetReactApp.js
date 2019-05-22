@@ -2,59 +2,79 @@ const fs = require("fs-extra");
 var path = require("path");
 const replace = require("replace-in-file");
 
-const { removeDirectoryIfExists  } = require("./lib/utility");
-const { gitClone, gitInit } = require("./lib/git");
+const { removeDirectoryIfExists } = require("./lib/utility");
+const { gitClone, gitInit, gitCheckout, gitFetch } = require("./lib/git");
 const { generateBaseSolution } = require("./lib/dotnet");
 const { createReactApp } = require("./lib/create-react-app");
 const { installNpmPackages } = require("./lib/npm");
-const tempDirectory = "temp";
+const buildDirectory = "build";
 
 const createDotnetReactApp = async (
   name,
   outputFolder,
   sourceGithubUri,
-  workingDirectory
+  workingDirectory,
+  branch = null
 ) => {
   // constants
-  const outputFolderPath = path.join(outputFolder, name);
-  const dotnetSolutionDirectory = path.join(outputFolderPath, "src");
-  const tempFolderPath = path.resolve(tempDirectory);
-  const sourceCloneOutputPath = path.join(tempFolderPath, name);
+  const solutionOutputPath = path.join(outputFolder, name);
+  const dotnetSolutionDirectory = path.join(solutionOutputPath, "src");
+  const buildFolderPath = path.resolve(buildDirectory);
+  const sourceCloneOutputPath = path.join(buildFolderPath, name);
 
-  console.log("Cleaning and initalizing the repository")
+  console.log("Cleaning and initalizing the repository");
   // clean the staging areas
-  await clean(tempFolderPath, outputFolderPath);
+  await clean(buildFolderPath, outputFolder, solutionOutputPath);
 
-  console.log("Initializing git repository")
+  console.log("Initializing git repository");
   // initialize a git repo in the output folder
-  await gitInit(outputFolderPath);
+  await gitInit(solutionOutputPath);
 
-  console.log("Cloning source repository")
+  console.log("Cloning source repository");
   // clone the latest of this repository to a temporary folder
   await gitClone(sourceGithubUri, sourceCloneOutputPath, workingDirectory);
+
+  if (branch && branch !== "master") {
+    console.log(`Checking out branch 'origin/${branch}'`);
+    await gitFetch();
+    await gitCheckout(sourceCloneOutputPath, [`origin/${branch}`, "--track"]);
+  }
 
   const templateManifest = getTemplateManifest(sourceCloneOutputPath);
 
   // create the new dotnet project
-  const webProjectDirectory = await generateBaseSolution(name, dotnetSolutionDirectory);
-  const clientAppDirectory = path.join(webProjectDirectory, templateManifest.clientAppPath)
+  const webProjectDirectory = await generateBaseSolution(
+    name,
+    dotnetSolutionDirectory
+  );
+  const clientAppDirectory = path.join(
+    webProjectDirectory,
+    templateManifest.clientAppPath
+  );
 
   // create the new create react app
-  await createReactApp(name, webProjectDirectory, templateManifest.clientAppPath);
+  await createReactApp(
+    name,
+    webProjectDirectory,
+    templateManifest.clientAppPath
+  );
 
   // // update with the template
   await updateWithTemplate(
     name,
-    outputFolderPath,
+    solutionOutputPath,
     webProjectDirectory,
     sourceCloneOutputPath,
     templateManifest
   );
 
   // install npm packages
-  await installNpmPackages(clientAppDirectory, templateManifest.npmPackagesToInstall);
+  await installNpmPackages(
+    clientAppDirectory,
+    templateManifest.npmPackagesToInstall
+  );
 
-  await removeDirectoryIfExists(tempDirectory);
+  await removeDirectoryIfExists(buildDirectory);
 };
 
 const updateWithTemplate = async (
@@ -64,7 +84,11 @@ const updateWithTemplate = async (
   sourceCloneOutputPath,
   templateManifest
 ) => {
-  const clientSrcPath = path.join(webProjectDirectory, templateManifest.clientAppPath, "src");
+  const clientSrcPath = path.join(
+    webProjectDirectory,
+    templateManifest.clientAppPath,
+    "src"
+  );
 
   // create array of file source and destinations from the manifest file
   const filesToCopy = templateManifest.filesToCopy.map(file => {
@@ -86,12 +110,9 @@ const updateWithTemplate = async (
   );
 
   // replace original template name in the output
-  const regex = new RegExp(templateManifest.name, 'g');
+  const regex = new RegExp(templateManifest.name, "g");
   const options = {
-    files: [
-      `${outputFolderPath}/**/*`,
-      `${outputFolderPath}/.vscode/*.json`
-    ],
+    files: [`${outputFolderPath}/**/*`, `${outputFolderPath}/.vscode/*.json`],
     ignore: [
       `${webProjectDirectory}/ClientApp/node_modules/**/*`,
       `${webProjectDirectory}/bin/**/*`,
@@ -103,24 +124,21 @@ const updateWithTemplate = async (
   await replace(options);
 };
 
-const getTemplateManifest = (sourceCloneOutputPath) => {
-  return require(path.join(
-    sourceCloneOutputPath,
-    "template",
-    "manifest.json"
-  ));
-}
+const getTemplateManifest = sourceCloneOutputPath => {
+  return require(path.join(sourceCloneOutputPath, "template", "manifest.json"));
+};
 
-const clean = async (tempFolderPath, outputFolderPath) => {
+const clean = async (tempFolderPath, outputFolder, solutionOutputPath) => {
   // clean/create temp folder
   await removeDirectoryIfExists(tempFolderPath);
   fs.mkdirSync(tempFolderPath);
 
   // create output folders
-  await removeDirectoryIfExists(outputFolderPath);
-  fs.mkdirSync(outputFolderPath);
-
-  const internalSrcFolder = path.join(outputFolderPath, `/src`);
+  await removeDirectoryIfExists(outputFolder);
+  fs.mkdirSync(outputFolder);
+  await removeDirectoryIfExists(solutionOutputPath);
+  fs.mkdirSync(solutionOutputPath);
+  const internalSrcFolder = path.join(solutionOutputPath, `/src`);
   fs.mkdirSync(internalSrcFolder);
 };
 

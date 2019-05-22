@@ -10,7 +10,10 @@
             "name": "Launch Program",
             "program": "${workspaceFolder}/index.js",
             "args": [
-                "--projectName", "PoopProject"
+                "--projectName", "CreateDotnetReactApp",
+                "--output", "${workspaceFolder}\\temp",
+                "--branch", "add-branch-for-debug",
+                "--clean", ""
             ]
         }
     ]
