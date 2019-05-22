@@ -19,12 +19,12 @@ const createDotnetReactApp = async (
   // constants
   const solutionOutputPath = path.join(outputFolder, name);
   const dotnetSolutionDirectory = path.join(solutionOutputPath, "src");
-  const tempFolderPath = path.resolve(buildDirectory);
-  const sourceCloneOutputPath = path.join(tempFolderPath, name);
+  const buildFolderPath = path.resolve(buildDirectory);
+  const sourceCloneOutputPath = path.join(buildFolderPath, name);
 
   console.log("Cleaning and initalizing the repository");
   // clean the staging areas
-  await clean(tempFolderPath, outputFolder, solutionOutputPath);
+  await clean(buildFolderPath, outputFolder, solutionOutputPath);
 
   console.log("Initializing git repository");
   // initialize a git repo in the output folder
@@ -35,6 +35,7 @@ const createDotnetReactApp = async (
   await gitClone(sourceGithubUri, sourceCloneOutputPath, workingDirectory);
 
   if (branch && branch !== "master") {
+    console.log(`Checking out branch ${branch}`);
     gitCheckout(sourceCloneOutputPath, branch);
   }
 
