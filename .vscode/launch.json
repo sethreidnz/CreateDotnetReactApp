@@ -11,8 +11,9 @@
             "program": "${workspaceFolder}/index.js",
             "args": [
                 "--projectName", "CreateDotnetReactApp",
-                "--output", "${workspaceFolder}/temp",
-                "--branch", "added-segoeui-docs"
+                "--output", "${workspaceFolder}\\build",
+                "--branch", "master",
+                "--clean", ""
             ]
         }
     ]

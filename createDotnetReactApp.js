@@ -7,7 +7,7 @@ const { gitClone, gitInit, gitCheckout } = require("./lib/git");
 const { generateBaseSolution } = require("./lib/dotnet");
 const { createReactApp } = require("./lib/create-react-app");
 const { installNpmPackages } = require("./lib/npm");
-const tempDirectory = "temp";
+const buildDirectory = "build";
 
 const createDotnetReactApp = async (
   name,
@@ -17,18 +17,18 @@ const createDotnetReactApp = async (
   branch = null
 ) => {
   // constants
-  const outputFolderPath = path.join(outputFolder, name);
-  const dotnetSolutionDirectory = path.join(outputFolderPath, "src");
-  const tempFolderPath = path.resolve(tempDirectory);
+  const solutionOutputPath = path.join(outputFolder, name);
+  const dotnetSolutionDirectory = path.join(solutionOutputPath, "src");
+  const tempFolderPath = path.resolve(buildDirectory);
   const sourceCloneOutputPath = path.join(tempFolderPath, name);
 
   console.log("Cleaning and initalizing the repository");
   // clean the staging areas
-  await clean(tempFolderPath, outputFolderPath);
+  await clean(tempFolderPath, outputFolder, solutionOutputPath);
 
   console.log("Initializing git repository");
   // initialize a git repo in the output folder
-  await gitInit(outputFolderPath);
+  await gitInit(solutionOutputPath);
 
   console.log("Cloning source repository");
   // clone the latest of this repository to a temporary folder
@@ -60,7 +60,7 @@ const createDotnetReactApp = async (
   // // update with the template
   await updateWithTemplate(
     name,
-    outputFolderPath,
+    solutionOutputPath,
     webProjectDirectory,
     sourceCloneOutputPath,
     templateManifest
@@ -72,7 +72,7 @@ const createDotnetReactApp = async (
     templateManifest.npmPackagesToInstall
   );
 
-  await removeDirectoryIfExists(tempDirectory);
+  await removeDirectoryIfExists(buildDirectory);
 };
 
 const updateWithTemplate = async (
@@ -126,16 +126,17 @@ const getTemplateManifest = sourceCloneOutputPath => {
   return require(path.join(sourceCloneOutputPath, "template", "manifest.json"));
 };
 
-const clean = async (tempFolderPath, outputFolderPath) => {
+const clean = async (tempFolderPath, outputFolder, solutionOutputPath) => {
   // clean/create temp folder
   await removeDirectoryIfExists(tempFolderPath);
   fs.mkdirSync(tempFolderPath);
 
   // create output folders
-  await removeDirectoryIfExists(outputFolderPath);
-  fs.mkdirSync(outputFolderPath);
-
-  const internalSrcFolder = path.join(outputFolderPath, `/src`);
+  await removeDirectoryIfExists(outputFolder);
+  fs.mkdirSync(outputFolder);
+  await removeDirectoryIfExists(solutionOutputPath);
+  fs.mkdirSync(solutionOutputPath);
+  const internalSrcFolder = path.join(solutionOutputPath, `/src`);
   fs.mkdirSync(internalSrcFolder);
 };
 
