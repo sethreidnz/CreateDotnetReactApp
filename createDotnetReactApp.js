@@ -35,9 +35,9 @@ const createDotnetReactApp = async (
   await gitClone(sourceGithubUri, sourceCloneOutputPath, workingDirectory);
 
   if (branch && branch !== "master") {
-    console.log(`Checking out branch ${branch}`);
+    console.log(`Checking out branch 'origin/${branch}'`);
     await gitFetch();
-    await gitCheckout(sourceCloneOutputPath, branch);
+    await gitCheckout(sourceCloneOutputPath, [`origin/${branch}`, "--track"]);
   }
 
   const templateManifest = getTemplateManifest(sourceCloneOutputPath);
