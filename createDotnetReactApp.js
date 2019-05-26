@@ -134,8 +134,6 @@ const clean = async (tempFolderPath, outputFolder, solutionOutputPath) => {
   fs.mkdirSync(tempFolderPath);
 
   // create output folders
-  await removeDirectoryIfExists(outputFolder);
-  fs.mkdirSync(outputFolder);
   await removeDirectoryIfExists(solutionOutputPath);
   fs.mkdirSync(solutionOutputPath);
   const internalSrcFolder = path.join(solutionOutputPath, `/src`);

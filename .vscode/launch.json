@@ -10,10 +10,8 @@
             "name": "Launch Program",
             "program": "${workspaceFolder}/index.js",
             "args": [
-                "--projectName", "CreateDotnetReactApp",
-                "--output", "${workspaceFolder}\\temp",
-                "--branch", "add-branch-for-debug",
-                "--clean", ""
+                "--projectName", "ResponsibleAIDesignCards",
+                "--output", "/Users/seth/dev"
             ]
         }
     ]
